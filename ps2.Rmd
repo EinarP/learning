@@ -1,0 +1,107 @@
+---
+title: "Problem Set 2"
+output: 
+  html_document: 
+    theme: united
+---
+
+```{r message=FALSE}
+library(igraph)
+```
+# Questions 1-3
+Answer questions 1 to 3 based on the following network, which is a Erdos-Renyi random network with 7 nodes and average degree equal to 2  
+
+```{r}
+set.seed(6)
+g <- graph_from_literal(1-4, 1-7, 2-4, 2-5, 3-5, 4-7, 6-7)
+n <- length(V(g))
+plot(g)
+```
+
+Which of the node(s) have the largest Degree centrality?
+```{r}
+degree(g)
+```
+
+What is the Closeness centrality for Node 2? 
+```{r}
+# manually
+sumlij <- 2*1 + 3*2 + 1*3
+(n-1)/sumlij
+# igraph
+closeness(g, "2", normalized=T)
+```
+
+Which of the node(s) have largest Betweenness centrality?
+```{r}
+betweenness(g)
+```
+
+# Q5
+
+# Questions 6-8
+
+```{r}
+v <- read.table('data/soceconetsps2', skip=1, nrows=80, col.names=c('name','label','V1','V2','V3'))
+e <- read.table('data/soceconetsps2', skip=82, col.names=c('from','to','V1'))
+head(e)
+
+g <- graph.data.frame(e[ ,1:2], directed=TRUE, vertices=v[ ,1:2])
+plot(g)
+```
+
+Which of the following country has the maximum closeness centrality?
+
+[Treat the graph as directed. Calculate centralities in the whole network, instead of the sub-network consisting of the five countries listed in the options.]
+
+```{r}
+ccl <- sapply(c('Germany','Italy','Japan','United States','China'), function(x) closeness(g, vids=V(g)$label==x))
+ccl
+max(ccl)
+```
+
+Which of the following country has the maximum "Betweenness centrality"?
+
+```{r}
+bcl <- sapply(c('Germany','Brazil','Argentina','United States','China'), function(x) betweenness(g, v=V(g)$label==x))
+max(bcl)
+```
+
+# Q8
+For this question you will need to generate some Poisson (Erdos-Renyi G(n,p)) random networks. 
+
+You should generate several (undirected) Poisson random networks with 400 nodes, and with different average degrees.
+
+Please indicate with which of the following average degrees the networks you generated turned out to be connected:
+
+* 400 nodes and average degree = 1;
+* 400 nodes and average degree = 5;
+* 400 nodes and average degree = 10;
+* 400 nodes and average degree = 20;
+
+(This problem contains randomness, and so you may want to generate some number of networks for each case, just to be sure:). If you generate at least ten networks in each case, your probability of accidentally getting the wrong answer will be negligible.)
+
+In answering this question, you should be able to easily relate your results to "A Threshold Theorem" mentioned in our lecture.
+
+[Since Gephi does not have an option for ``average degree'', you need to choose "wiring probability" p instead of "average degree". Please notice that avg.degree≈p∗n. 
+
+In addition, it generates directed networks, but you can ignore the directions of the links.]
+
+In the G(n,p) model, the expected average degree is np http://cs.stackexchange.com/questions/39774/set-the-parameters-of-a-erdos-renyi-graph-generator-to-get-a-specific-mean-degre
+.
+```{r}
+n <- 400
+
+g1 <- sample_gnp(n, 1/n)
+is.connected(g1)
+
+g5 <- sample_gnp(n, 5/n)
+is.connected(g5)
+
+g10 <- sample_gnp(n, 10/n)
+is.connected(g10)
+
+
+g20 <- sample_gnp(n, 20/n)
+is.connected(g20)
+```

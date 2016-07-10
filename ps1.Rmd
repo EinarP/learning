@@ -1,0 +1,69 @@
+---
+title: "Problem Set 1"
+output: 
+  html_document: 
+    theme: united
+---
+
+```{r message=FALSE}
+library(igraph)
+```
+# Q1
+Given a network (N,g), define its complement to be the network (N,g′), such that (ij∈g′) if and only if (ij∉g). 
+
+Which statement is correct of networks with at least four nodes?
+
+a) A network that is connected has an empty complement.
+
+b) If a network is connected, then its complement is also connected.
+
+c) There is a network such that both itself and its complement are connected.
+
+TODO: Draw matrix and its complement
+
+# Q2 - Q6
+If g2 is the matrix on right, which of the following network could be represented by g?
+
+```{r}
+
+```
+
+# Q7
+What is the "Average degree"?
+
+```{r}
+v <- read.table('data/soceconetsps1', skip=1, nrows=135)
+e <- read.table('data/soceconetsps1', skip=137, col.names=c('src','dest','smth'))
+head(e)
+
+g <- graph.empty(n=nrow(v), directed=FALSE)
+for (idx in 1:nrow(e)) {
+  g <- g + edge(e[idx,1], e[idx,2])  
+}
+plot(g)
+
+mean(degree(g))
+```
+
+# Q8
+What is the "Diameter"?
+
+```{r}
+diameter(g)
+```
+
+# Q9
+What is the "Maximum Clustering"?
+
+```{r}
+lt <- transitivity(g, type="local")
+
+max(lt, na.rm=TRUE)
+```
+
+# Q10
+What is the "Minimum Clustering"? [Note: Please report the minimal non-zero clustering.]
+
+```{r}
+min(lt[lt > 0], na.rm=TRUE)
+```
