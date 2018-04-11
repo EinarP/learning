@@ -14,6 +14,15 @@ library(igraph)
 ## Notation
 Network g comprised of vertices V and edges E
 
+## Creating graphs
+
+### Literal definition
+
+```{r}
+g <- graph_from_literal(A:B-+C-+D-+E, F++G)
+plot(g+graph_from_literal(E-+F,G-+A))
+```
+
 ### Adjacency matrix
 TODO: Generate adjacency matrices by taking into account that edges can be weighted or unweighted and directed or undirected
 
